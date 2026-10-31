@@ -214,3 +214,53 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     });
   }, { passive: true });
 })();
+
+
+/* ── Galería: carrusel de una imagen a la vez ── */
+(function () {
+  const root = document.getElementById('g-carousel');
+  if (!root) return;
+  const track = root.querySelector('.g-track');
+  const slides = root.querySelectorAll('.g-slide');
+  const dotsWrap = root.querySelector('.g-dots');
+  const n = slides.length;
+  let i = 0;
+
+  const dots = Array.from(slides).map((_, k) => {
+    const d = document.createElement('button');
+    d.type = 'button';
+    d.className = 'g-dot';
+    d.setAttribute('role', 'tab');
+    d.setAttribute('aria-label', `Ir a la imagen ${k + 1}`);
+    d.addEventListener('click', () => go(k));
+    dotsWrap.appendChild(d);
+    return d;
+  });
+
+  function go(k) {
+    i = (k + n) % n;
+    track.style.transform = `translateX(-${i * 100}%)`;
+    dots.forEach((d, j) => {
+      d.classList.toggle('active', j === i);
+      d.setAttribute('aria-selected', j === i ? 'true' : 'false');
+    });
+  }
+
+  root.querySelector('.g-prev').addEventListener('click', () => go(i - 1));
+  root.querySelector('.g-next').addEventListener('click', () => go(i + 1));
+  root.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') go(i - 1);
+    if (e.key === 'ArrowRight') go(i + 1);
+  });
+
+  let x0 = null;
+  root.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+  root.addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 40) go(dx < 0 ? i + 1 : i - 1);
+    x0 = null;
+  }, { passive: true });
+
+  go(0);
+})();
