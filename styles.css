@@ -188,7 +188,7 @@ ul { list-style: none; }
 #hero {
   min-height: 100vh;
   display: flex; align-items: center;
-  background: linear-gradient(135deg, #1a0a2e 0%, #3a1a5c 45%, #6b3fa0 80%, #8b5cc4 100%);
+  background: linear-gradient(135deg, #3a1a5c 0%, #5b2d8e 45%, #8b5cc4 80%, #a98bd6 100%);
   position: relative; overflow: hidden;
 }
 
